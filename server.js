@@ -7,11 +7,15 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 
 /* ================= CONFIG ================= */
-const PORT = 3000;
-const JWT_SECRET = "replace_this_with_a_long_random_secret";
+const PORT = Number(process.env.PORT || 3000);
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("Missing JWT_SECRET environment variable");
+}
 
 /* ================= DB ================= */
-const db = new Database("rrapid.db");
+const DB_PATH = process.env.DATABASE_PATH || "rrapid.db";
+const db = new Database(DB_PATH);
 db.pragma("journal_mode = WAL");
 
 db.exec(`
